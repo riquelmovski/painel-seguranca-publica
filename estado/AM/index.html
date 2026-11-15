@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="h-full bg-slate-50/60">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segurança Pública - Amazonas (AM) | VDE 2025</title>
+    
+    <!-- 1. Tipografia Google: Plus Jakarta Sans / Google Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- 2. Tailwind CSS via CDN com personalização Google Material 3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                    },
+                    colors: {
+                        google: {
+                            blue: '#1a73e8',
+                            dark: '#202124',
+                            gray: '#5f6368',
+                            light: '#f8f9fa',
+                            surface: '#ffffff',
+                            border: '#e8eaed'
+                        }
+                    },
+                    boxShadow: {
+                        'google-nav': '0 1px 3px rgba(0, 0, 0, 0.04)',
+                        'google-card': '0 4px 20px -4px rgba(0, 0, 0, 0.05)',
+                        'google-hover': '0 8px 30px -6px rgba(0, 0, 0, 0.08)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f8fafc;
+            border-radius: 9999px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+    
+    <!-- 3. Chart.js via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="min-h-full flex flex-col bg-slate-50/60 text-slate-800 antialiased font-sans">
+
+    <!-- ====================================================================== -->
+    <!-- 1. CABEÇALHO MINIMALISTA (ESTILO GOOGLE / MATERIAL 3) -->
+    <!-- ====================================================================== -->
+    <header class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                
+                <!-- Lado Esquerdo: Logo & Navegação Principal -->
+                <div class="flex items-center space-x-8">
+                    
+                    <!-- Logo / Título -->
+                    <a href="../../index.html" class="flex items-center space-x-3 group">
+                        <div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center shadow-sm transition-transform group-hover:scale-105">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-slate-900 font-bold text-base tracking-tight leading-tight">
+                                Painel de Segurança Pública
+                            </span>
+                            <span class="text-[10px] text-slate-400 font-medium tracking-wider uppercase">
+                                Estatísticas Oficiais &bull; VDE 2025
+                            </span>
+                        </div>
+                    </a>
+
+                    <!-- Links de Navegação com Mega Menu -->
+                    <nav class="hidden md:flex items-center space-x-1">
+                        
+                        <!-- 1. Link Visão Geral -->
+                        <a href="../../index.html" 
+                           class="px-3.5 py-2 text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+                            Visão Geral
+                        </a>
+
+                        <!-- 2. Menu "Por estados" com Mega Menu em 5 Colunas por Região -->
+                        <div class="relative group">
+                            <button type="button" 
+                                    class="inline-flex items-center gap-1 px-3.5 py-2 text-sm font-semibold text-slate-900 bg-slate-100/80 rounded-lg transition">
+                                <span>Por estados</span>
+                                <svg class="w-4 h-4 text-slate-700 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </button>
+
+                            <!-- Mega Menu Flutuante (Hover) -->
+                            <div class="absolute top-full left-0 pt-2 hidden group-hover:block z-50">
+                                <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 w-[700px] transition-all">
+                                    <div class="flex items-center justify-between pb-3 mb-4 border-b border-gray-100 text-xs">
+                                        <span class="font-bold text-slate-900 uppercase tracking-wider">Unidades Federativas por Grande Região</span>
+                                        <span class="text-slate-400 font-medium">27 Estados</span>
+                                    </div>
+
+                                    <div class="grid grid-cols-5 gap-3.5">
+                                        
+                                        <!-- Nordeste -->
+                                        <div>
+                                            <h4 class="text-[11px] font-bold text-indigo-600 uppercase tracking-wider mb-2">Nordeste</h4>
+                                            <div class="space-y-0.5">
+                                                <a href="../../estado/AL/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">AL <span class="text-slate-400 font-normal">Alagoas</span></a>
+                                                <a href="../../estado/BA/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">BA <span class="text-slate-400 font-normal">Bahia</span></a>
+                                                <a href="../../estado/CE/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">CE <span class="text-slate-400 font-normal">Ceará</span></a>
+                                                <a href="../../estado/MA/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">MA <span class="text-slate-400 font-normal">Maranhão</span></a>
+                                                <a href="../../estado/PB/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">PB <span class="text-slate-400 font-normal">Paraíba</span></a>
+                                                <a href="../../estado/PE/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">PE <span class="text-slate-400 font-normal">Pernambuco</span></a>
+                                                <a href="../../estado/PI/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">PI <span class="text-slate-400 font-normal">Piauí</span></a>
+                                                <a href="../../estado/RN/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">RN <span class="text-slate-400 font-normal">R. G. Norte</span></a>
+                                                <a href="../../estado/SE/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">SE <span class="text-slate-400 font-normal">Sergipe</span></a>
+                                            </div>
+                                        </div>
+
+                                        <!-- Sudeste -->
+                                        <div>
+                                            <h4 class="text-[11px] font-bold text-blue-600 uppercase tracking-wider mb-2">Sudeste</h4>
+                                            <div class="space-y-0.5">
+                                                <a href="../../estado/ES/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">ES <span class="text-slate-400 font-normal">Esp. Santo</span></a>
+                                                <a href="../../estado/MG/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">MG <span class="text-slate-400 font-normal">Minas Gerais</span></a>
+                                                <a href="../../estado/RJ/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">RJ <span class="text-slate-400 font-normal">Rio de Janeiro</span></a>
+                                                <a href="../../estado/SP/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">SP <span class="text-slate-400 font-normal">São Paulo</span></a>
+                                            </div>
+                                        </div>
+
+                                        <!-- Sul -->
+                                        <div>
+                                            <h4 class="text-[11px] font-bold text-emerald-600 uppercase tracking-wider mb-2">Sul</h4>
+                                            <div class="space-y-0.5">
+                                                <a href="../../estado/PR/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">PR <span class="text-slate-400 font-normal">Paraná</span></a>
+                                                <a href="../../estado/RS/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">RS <span class="text-slate-400 font-normal">R. G. Sul</span></a>
+                                                <a href="../../estado/SC/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">SC <span class="text-slate-400 font-normal">S. Catarina</span></a>
+                                            </div>
+                                        </div>
+
+                                        <!-- Centro-Oeste -->
+                                        <div>
+                                            <h4 class="text-[11px] font-bold text-amber-600 uppercase tracking-wider mb-2">Centro-Oeste</h4>
+                                            <div class="space-y-0.5">
+                                                <a href="../../estado/DF/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">DF <span class="text-slate-400 font-normal">Dist. Federal</span></a>
+                                                <a href="../../estado/GO/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">GO <span class="text-slate-400 font-normal">Goiás</span></a>
+                                                <a href="../../estado/MT/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">MT <span class="text-slate-400 font-normal">Mato Grosso</span></a>
+                                                <a href="../../estado/MS/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">MS <span class="text-slate-400 font-normal">M. G. Sul</span></a>
+                                            </div>
+                                        </div>
+
+                                        <!-- Norte -->
+                                        <div>
+                                            <h4 class="text-[11px] font-bold text-cyan-600 uppercase tracking-wider mb-2">Norte</h4>
+                                            <div class="space-y-0.5">
+                                                <a href="../../estado/AC/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">AC <span class="text-slate-400 font-normal">Acre</span></a>
+                                                <a href="../../estado/AP/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">AP <span class="text-slate-400 font-normal">Amapá</span></a>
+                                                <a href="../../estado/AM/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition bg-blue-50 text-blue-700 font-bold">AM <span class="text-slate-400 font-normal">Amazonas</span></a>
+                                                <a href="../../estado/PA/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">PA <span class="text-slate-400 font-normal">Pará</span></a>
+                                                <a href="../../estado/RO/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">RO <span class="text-slate-400 font-normal">Rondônia</span></a>
+                                                <a href="../../estado/RR/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">RR <span class="text-slate-400 font-normal">Roraima</span></a>
+                                                <a href="../../estado/TO/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs font-medium block transition text-slate-700">TO <span class="text-slate-400 font-normal">Tocantins</span></a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Menu "Por ocorrências" com Rolagem Suave -->
+                        <div class="relative group">
+                            <button type="button" 
+                                    class="inline-flex items-center gap-1 px-3.5 py-2 text-sm font-semibold text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition">
+                                <span>Por ocorrências</span>
+                                <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-700 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </button>
+
+                            <!-- Dropdown Suspenso com Rolagem -->
+                            <div class="absolute top-full left-0 pt-2 hidden group-hover:block z-50">
+                                <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-3 w-80 max-h-80 overflow-y-auto custom-scroll transition-all">
+                                    <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1.5 mb-1 border-b border-gray-100">
+                                        Filtrar Indicador de Segurança
+                                    </div>
+                                    <a href="../../index.html" 
+                                       class="px-3 py-2 text-xs font-semibold rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span>🔍 Todos os Eventos (Geral)</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Apreens%C3%A3o%20de%20Coca%C3%ADna" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Apreensão de Cocaína">Apreensão de Cocaína</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Apreens%C3%A3o%20de%20Maconha" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Apreensão de Maconha">Apreensão de Maconha</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Arma%20de%20Fogo%20Apreendida" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Arma de Fogo Apreendida">Arma de Fogo Apreendida</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Atendimento%20pr%C3%A9-hospitalar" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Atendimento pré-hospitalar">Atendimento pré-hospitalar</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Busca%20e%20salvamento" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Busca e salvamento">Busca e salvamento</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Combate%20a%20inc%C3%AAndios" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Combate a incêndios">Combate a incêndios</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Emiss%C3%A3o%20de%20Alvar%C3%A1s%20de%20licen%C3%A7a" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Emissão de Alvarás de licença">Emissão de Alvarás de licença</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Estupro" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Estupro">Estupro</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Estupro%20de%20vulner%C3%A1vel" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Estupro de vulnerável">Estupro de vulnerável</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Feminic%C3%ADdio" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Feminicídio">Feminicídio</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Furto%20de%20ve%C3%ADculo" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Furto de veículo">Furto de veículo</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Homic%C3%ADdio%20doloso" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Homicídio doloso">Homicídio doloso</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Les%C3%A3o%20corporal%20seguida%20de%20morte" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Lesão corporal seguida de morte">Lesão corporal seguida de morte</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Mandado%20de%20pris%C3%A3o%20cumprido" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Mandado de prisão cumprido">Mandado de prisão cumprido</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Morte%20de%20Agente%20do%20Estado" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Morte de Agente do Estado">Morte de Agente do Estado</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Morte%20no%20tr%C3%A2nsito%20ou%20em%20decorr%C3%AAncia%20dele%20%28exceto%20homic%C3%ADdio%20doloso%29" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Morte no trânsito ou em decorrência dele (exceto homicídio doloso)">Morte no trânsito ou em decorrência dele (exceto homicídio doloso)</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Morte%20por%20interven%C3%A7%C3%A3o%20de%20Agente%20do%20Estado" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Morte por intervenção de Agente do Estado">Morte por intervenção de Agente do Estado</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Mortes%20a%20esclarecer%20%28sem%20ind%C3%ADcio%20de%20crime%29" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Mortes a esclarecer (sem indício de crime)">Mortes a esclarecer (sem indício de crime)</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Mortes%20no%20tr%C3%A2nsito" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Mortes no trânsito">Mortes no trânsito</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Pessoa%20Desaparecida" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Pessoa Desaparecida">Pessoa Desaparecida</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Pessoa%20Localizada" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Pessoa Localizada">Pessoa Localizada</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Realiza%C3%A7%C3%A3o%20de%20vistorias" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Realização de vistorias">Realização de vistorias</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Roubo%20a%20institui%C3%A7%C3%A3o%20financeira" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Roubo a instituição financeira">Roubo a instituição financeira</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Roubo%20de%20carga" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Roubo de carga">Roubo de carga</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Roubo%20de%20ve%C3%ADculo" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Roubo de veículo">Roubo de veículo</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Roubo%20seguido%20de%20morte%20%28latroc%C3%ADnio%29" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Roubo seguido de morte (latrocínio)">Roubo seguido de morte (latrocínio)</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Suic%C3%ADdio" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Suicídio">Suicídio</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Suic%C3%ADdio%20de%20Agente%20do%20Estado" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Suicídio de Agente do Estado">Suicídio de Agente do Estado</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Tentativa%20de%20feminic%C3%ADdio" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Tentativa de feminicídio">Tentativa de feminicídio</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Tentativa%20de%20homic%C3%ADdio" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Tentativa de homicídio">Tentativa de homicídio</span>
+                                    </a>
+                                    
+                                    <a href="/?evento=Tr%C3%A1fico%20de%20drogas" 
+                                       class="px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition">
+                                        <span class="truncate" title="Tráfico de drogas">Tráfico de drogas</span>
+                                    </a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                    </nav>
+                </div>
+
+                <!-- Lado Direito: Botão Pílula Google -->
+                <div class="flex items-center space-x-3">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-800 border border-slate-200/80">
+                        AM &bull; 16º no CVLI
+                    </span>
+
+                    <a href="/exportar/" 
+                       class="rounded-full bg-slate-900 text-white px-5 py-2 text-sm font-medium hover:bg-slate-800 transition shadow-sm inline-flex items-center gap-2 active:scale-95">
+                        <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        <span>Exportar CSV</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- ====================================================================== -->
+    <!-- 2. CONTEÚDO PRINCIPAL DO ESTADO -->
+    <!-- ====================================================================== -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- BOTÃO DE RETORNO AO PANORAMA NACIONAL & CABEÇALHO DO ESTADO -->
+        <div class="space-y-4">
+            <div>
+                <a href="../../index.html" 
+                   class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold text-slate-600 bg-white border border-gray-200 hover:border-slate-300 hover:text-slate-900 shadow-sm transition group">
+                    <svg class="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    <span>Voltar ao Panorama Nacional</span>
+                </a>
+            </div>
+
+            <!-- Banner do Estado Estilo Google Material 3 -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-8 opacity-5 text-[140px] font-black select-none pointer-events-none">
+                    AM
+                </div>
+                
+                <div class="relative z-10 max-w-xl">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700">
+                            Unidade Federativa
+                        </span>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-100">
+                            CVLI: 16º no Brasil
+                        </span>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-100">
+                            CVP: 18º no Brasil
+                        </span>
+                    </div>
+
+                    <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight mt-2 text-slate-900">
+                        Amazonas (AM)
+                    </h1>
+                    <p class="text-sm text-slate-500 font-medium mt-1">
+                        Estatísticas oficiais de crimes violentos, letalidade intencional e produtividade das forças de segurança em 2025.
+                    </p>
+                </div>
+
+                <!-- Resumo dos Indicadores Estratégicos -->
+                <div class="relative z-10 grid grid-cols-2 gap-3 self-stretch sm:self-auto bg-slate-50/90 border border-slate-100 rounded-2xl p-4">
+                    <div class="pr-4 border-r border-slate-200/60">
+                        <div class="text-[10px] font-bold uppercase tracking-wider text-rose-600 flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                            Letalidade (CVLI)
+                        </div>
+                        <div class="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">759</div>
+                        <div class="text-[10px] text-slate-400 font-medium">16º ranking nac.</div>
+                    </div>
+                    <div class="pl-2">
+                        <div class="text-[10px] font-bold uppercase tracking-wider text-amber-600 flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                            Patrimônio (CVP)
+                        </div>
+                        <div class="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">627</div>
+                        <div class="text-[10px] text-slate-400 font-medium">18º ranking nac.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====================================================================== -->
+        <!-- 3. GRADE DE 4 CARDS ANALÍTICOS PRINCIPAIS DA ABA DO ESTADO -->
+        <!-- ====================================================================== -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-6px_rgba(0,0,0,0.08)] p-5 transition-all duration-300 flex flex-col justify-between group">
+                <div>
+                    <!-- Header do Card -->
+                    <div class="flex items-start justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                                Total de CVLI
+                            </span>
+                            <span class="text-xs font-semibold text-slate-600 mt-0.5" title="Homicídio Doloso, Feminicídio, Latrocínio e Lesão Corporal Seguida de Morte (exclui tentativas e trânsito)">
+                                Crimes Violentos Letais Intencionais
+                            </span>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105
+                                    bg-rose-50 text-rose-600 border border-rose-100/60
+                                    ">
+                            
+                            <!-- Ícone Letalidade / Alerta CVLI -->
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                            
+                        </div>
+                    </div>
+
+                    <!-- Valor Principal -->
+                    <div class="my-3">
+                        <div class="text-3xl font-black text-slate-900 tracking-tight truncate">
+                            759
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rodapé com Ranking e Participação Nacional -->
+                <div class="pt-3 border-t border-slate-50 flex items-center justify-between text-xs">
+                    <span class="font-bold 
+                                text-rose-700
+                                ">
+                        16º no Brasil
+                    </span>
+                    <span class="text-slate-400 font-medium">
+                        2.2% do país
+                    </span>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-6px_rgba(0,0,0,0.08)] p-5 transition-all duration-300 flex flex-col justify-between group">
+                <div>
+                    <!-- Header do Card -->
+                    <div class="flex items-start justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                                Total de CVP
+                            </span>
+                            <span class="text-xs font-semibold text-slate-600 mt-0.5" title="Roubos de veículo, de carga, banco e latrocínio (exclui furtos)">
+                                Crimes Violentos contra o Patrimônio
+                            </span>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105
+                                    bg-amber-50 text-amber-600 border border-amber-100/60
+                                    ">
+                            
+                            <!-- Ícone CVP / Crimes contra o Patrimônio -->
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                            
+                        </div>
+                    </div>
+
+                    <!-- Valor Principal -->
+                    <div class="my-3">
+                        <div class="text-3xl font-black text-slate-900 tracking-tight truncate">
+                            627
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rodapé com Ranking e Participação Nacional -->
+                <div class="pt-3 border-t border-slate-50 flex items-center justify-between text-xs">
+                    <span class="font-bold 
+                                text-amber-700
+                                ">
+                        18º no Brasil
+                    </span>
+                    <span class="text-slate-400 font-medium">
+                        0.55% do país
+                    </span>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-6px_rgba(0,0,0,0.08)] p-5 transition-all duration-300 flex flex-col justify-between group">
+                <div>
+                    <!-- Header do Card -->
+                    <div class="flex items-start justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                                Mandados de Prisão
+                            </span>
+                            <span class="text-xs font-semibold text-slate-600 mt-0.5" title="Capturas e prisões judiciais cumpridas pelas forças policiais">
+                                Mandados de Prisão Cumpridos
+                            </span>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105
+                                    bg-blue-50 text-blue-600 border border-blue-100/60
+                                    ">
+                            
+                            <!-- Ícone Mandados de Prisão / Prisão Policial -->
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                            
+                        </div>
+                    </div>
+
+                    <!-- Valor Principal -->
+                    <div class="my-3">
+                        <div class="text-3xl font-black text-slate-900 tracking-tight truncate">
+                            4.466
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rodapé com Ranking e Participação Nacional -->
+                <div class="pt-3 border-t border-slate-50 flex items-center justify-between text-xs">
+                    <span class="font-bold 
+                                text-blue-700
+                                ">
+                        18º no Brasil
+                    </span>
+                    <span class="text-slate-400 font-medium">
+                        1.5% do país
+                    </span>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-6px_rgba(0,0,0,0.08)] p-5 transition-all duration-300 flex flex-col justify-between group">
+                <div>
+                    <!-- Header do Card -->
+                    <div class="flex items-start justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                                Armas Apreendidas
+                            </span>
+                            <span class="text-xs font-semibold text-slate-600 mt-0.5" title="Armas de fogo recolhidas e retiradas de circulação na UF">
+                                Armas de Fogo Apreendidas
+                            </span>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105
+                                    bg-emerald-50 text-emerald-600 border border-emerald-100/60">
+                            
+                            <!-- Ícone Armas de Fogo Apreendidas / Desarmamento -->
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="9" stroke-width="2"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v3m0 12v3m-9-9h3m12 0h3m-6 0a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            
+                        </div>
+                    </div>
+
+                    <!-- Valor Principal -->
+                    <div class="my-3">
+                        <div class="text-3xl font-black text-slate-900 tracking-tight truncate">
+                            1.718
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rodapé com Ranking e Participação Nacional -->
+                <div class="pt-3 border-t border-slate-50 flex items-center justify-between text-xs">
+                    <span class="font-bold 
+                                text-emerald-700">
+                        20º no Brasil
+                    </span>
+                    <span class="text-slate-400 font-medium">
+                        1.56% do país
+                    </span>
+                </div>
+            </div>
+            
+        </section>
+
+        <!-- ====================================================================== -->
+        <!-- 4. SEÇÃO DE DECOMPOSIÇÃO ANALÍTICA (SUB-INDICADORES CVLI & CVP) -->
+        <!-- ====================================================================== -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Painel 1: Decomposição Analítica do CVLI -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] p-6">
+                <div class="flex items-center justify-between pb-3 mb-4 border-b border-gray-100">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-rose-600"></span>
+                            Decomposição do CVLI em AM
+                        </h3>
+                        <p class="text-xs text-slate-400 font-medium mt-0.5">Distribuição proporcional dos 4 crimes letais intencionais</p>
+                    </div>
+                    <span class="text-xs font-black px-3 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-100">
+                        Total: 759
+                    </span>
+                </div>
+
+                <div class="space-y-4">
+                    
+                    <div>
+                        <div class="flex items-center justify-between text-xs mb-1.5">
+                            <span class="font-semibold text-slate-800">Homicídio doloso</span>
+                            <div class="flex items-center gap-2">
+                                <span class="font-extrabold text-slate-900">708</span>
+                                <span class="text-slate-400 font-medium w-12 text-right">(93.3%)</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                            <div class="bg-rose-600 h-2 rounded-full transition-all duration-500" style="width: 93.3%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex items-center justify-between text-xs mb-1.5">
+                            <span class="font-semibold text-slate-800">Feminicídio</span>
+                            <div class="flex items-center gap-2">
+                                <span class="font-extrabold text-slate-900">20</span>
+                                <span class="text-slate-400 font-medium w-12 text-right">(2.6%)</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                            <div class="bg-rose-500 h-2 rounded-full transition-all duration-500" style="width: 2.6%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex items-center justify-between text-xs mb-1.5">
+                            <span class="font-semibold text-slate-800">Roubo seguido de morte (latrocínio)</span>
+                            <div class="flex items-center gap-2">
+                                <span class="font-extrabold text-slate-900">17</span>
+                                <span class="text-slate-400 font-medium w-12 text-right">(2.2%)</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                            <div class="bg-pink-500 h-2 rounded-full transition-all duration-500" style="width: 2.2%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex items-center justify-between text-xs mb-1.5">
+                            <span class="font-semibold text-slate-800">Lesão corporal seguida de morte</span>
+                            <div class="flex items-center gap-2">
+                                <span class="font-extrabold text-slate-900">14</span>
+                                <span class="text-slate-400 font-medium w-12 text-right">(1.8%)</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                            <div class="bg-red-700 h-2 rounded-full transition-all duration-500" style="width: 1.8%;"></div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="mt-5 pt-3 border-t border-slate-50 flex items-center justify-between text-[11px] text-slate-400">
+                    <span>* Regra estrita: exclui tentativas, suicídios e mortes no trânsito</span>
+                    <span class="font-semibold text-rose-700">100% crimes letais</span>
+                </div>
+            </div>
+
+            <!-- Painel 2: Decomposição Analítica do CVP -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] p-6">
+                <div class="flex items-center justify-between pb-3 mb-4 border-b border-gray-100">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                            Decomposição do CVP em AM
+                        </h3>
+                        <p class="text-xs text-slate-400 font-medium mt-0.5">Distribuição proporcional dos roubos qualificados com violência</p>
+                    </div>
+                    <span class="text-xs font-black px-3 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-100">
+                        Total: 627
+                    </span>
+                </div>
+
+                <div class="space-y-4">
+                    
+                    <div>
+                        <div class="flex items-center justify-between text-xs mb-1.5">
+                            <span class="font-semibold text-slate-800">Roubo de veículo</span>
+                            <div class="flex items-center gap-2">
+                                <span class="font-extrabold text-slate-900">587</span>
+                                <span class="text-slate-400 font-medium w-12 text-right">(93.6%)</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                            <div class="bg-amber-500 h-2 rounded-full transition-all duration-500" style="width: 93.6%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex items-center justify-between text-xs mb-1.5">
+                            <span class="font-semibold text-slate-800">Roubo de carga</span>
+                            <div class="flex items-center gap-2">
+                                <span class="font-extrabold text-slate-900">21</span>
+                                <span class="text-slate-400 font-medium w-12 text-right">(3.3%)</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                            <div class="bg-orange-500 h-2 rounded-full transition-all duration-500" style="width: 3.3%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex items-center justify-between text-xs mb-1.5">
+                            <span class="font-semibold text-slate-800">Roubo a instituição financeira</span>
+                            <div class="flex items-center gap-2">
+                                <span class="font-extrabold text-slate-900">2</span>
+                                <span class="text-slate-400 font-medium w-12 text-right">(0.3%)</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                            <div class="bg-yellow-600 h-2 rounded-full transition-all duration-500" style="width: 0.3%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex items-center justify-between text-xs mb-1.5">
+                            <span class="font-semibold text-slate-800">Roubo seguido de morte (latrocínio)</span>
+                            <div class="flex items-center gap-2">
+                                <span class="font-extrabold text-slate-900">17</span>
+                                <span class="text-slate-400 font-medium w-12 text-right">(2.7%)</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                            <div class="bg-rose-500 h-2 rounded-full transition-all duration-500" style="width: 2.7%;"></div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="mt-5 pt-3 border-t border-slate-50 flex items-center justify-between text-[11px] text-slate-400">
+                    <span>* Delitos com grave ameaça/violência (não inclui furto)</span>
+                    <span class="font-semibold text-amber-700">100% roubos violentos</span>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ====================================================================== -->
+        <!-- 5. SEÇÃO DE GRÁFICOS ANALÍTICOS ESPECÍFICOS DA UF -->
+        <!-- ====================================================================== -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- GRÁFICO 1: EVOLUÇÃO TEMPORAL MENSAL (LINHAS COM GRADIENTE) -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-6px_rgba(0,0,0,0.08)] p-6 transition-all duration-300 flex flex-col justify-between">
+                <div class="flex items-center justify-between pb-4 mb-4 border-b border-gray-100">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-sm bg-blue-600"></span>
+                            Evolução Temporal Mensal (2025)
+                        </h3>
+                        <p class="text-xs text-slate-400 font-medium mt-0.5">Série histórica mensal da criminalidade e produtividade policial em AM</p>
+                    </div>
+                    <span class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700">
+                        12 Meses
+                    </span>
+                </div>
+
+                <div class="relative w-full h-[340px]">
+                    <canvas id="chartEvolucaoMensalUf"></canvas>
+                </div>
+            </div>
+
+            <!-- GRÁFICO 2: RANKING DOS PRINCIPAIS CRIMES NA UF -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-6px_rgba(0,0,0,0.08)] p-6 transition-all duration-300 flex flex-col justify-between">
+                <div class="flex items-center justify-between pb-4 mb-4 border-b border-gray-100">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-sm bg-indigo-600"></span>
+                            Top 10 Crimes / Ocorrências na UF
+                        </h3>
+                        <p class="text-xs text-slate-400 font-medium mt-0.5">Indicadores criminais e repressão qualificada em Amazonas</p>
+                    </div>
+                    <span class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700">
+                        Top 10
+                    </span>
+                </div>
+
+                <div class="relative w-full h-[340px]">
+                    <canvas id="chartCrimesUf"></canvas>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ====================================================================== -->
+        <!-- 6. TABELA DE REGISTROS DETALHADOS DA UF -->
+        <!-- ====================================================================== -->
+        <section class="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] p-6 space-y-5">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-gray-100 gap-4">
+                <div>
+                    <h3 class="text-base font-bold text-slate-900">
+                        Tabela de Ocorrências Consolidadas de Segurança Pública em Amazonas
+                    </h3>
+                    <p class="text-xs text-slate-500 font-medium mt-0.5">
+                        Detalhamento por tipo de crime e quantitativo por gênero (exclui serviços administrativos e de bombeiros).
+                    </p>
+                </div>
+
+                <!-- Campo de busca na tabela -->
+                <div class="relative">
+                    <input type="text" id="filtroTabelaUf" placeholder="Filtrar tipo de crime..."
+                           class="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 pl-8 text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition w-56 shadow-sm"
+                           onkeyup="filtrarTabelaLocal()">
+                    <svg class="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-gray-100">
+                <div class="max-h-[460px] overflow-y-auto custom-scroll">
+                    <table class="w-full text-left text-xs" id="tabelaEventosUf">
+                        <thead class="bg-slate-50 text-slate-600 uppercase tracking-wider font-bold border-b border-gray-100 sticky top-0 z-10 shadow-sm">
+                            <tr>
+                                <th scope="col" class="py-3 px-4">Indicador / Evento</th>
+                                <th scope="col" class="py-3 px-4 text-right">Vítimas Femininas</th>
+                                <th scope="col" class="py-3 px-4 text-right">Vítimas Masculinas</th>
+                                <th scope="col" class="py-3 px-4 text-right font-extrabold text-slate-900">Total de Registros</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 bg-white font-medium text-slate-700">
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Mandado de prisão cumprido
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    4.466
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Tráfico de drogas
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    3.274
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Furto de veículo
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    1.732
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Arma de Fogo Apreendida
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    1.718
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Estupro de vulnerável
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    1.178
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    133
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    1.353
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Homicídio doloso
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    42
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    665
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    708
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Tentativa de homicídio
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    96
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    519
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    642
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Roubo de veículo
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    587
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Estupro
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    391
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    25
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    416
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Suicídio
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    37
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    188
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    226
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Morte no trânsito ou em decorrência dele (exceto homicídio doloso)
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    33
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    145
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    178
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Tentativa de feminicídio
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    108
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    1
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    109
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Morte por intervenção de Agente do Estado
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    43
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    43
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Mortes no trânsito
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    8
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    18
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    26
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Roubo de carga
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    21
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Feminicídio
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    20
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    20
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Roubo seguido de morte (latrocínio)
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    1
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    16
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    17
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Lesão corporal seguida de morte
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    2
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    12
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    14
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Mortes a esclarecer (sem indício de crime)
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    1
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    3
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    4
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Suicídio de Agente do Estado
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    4
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    4
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Roubo a instituição financeira
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    2
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Morte de Agente do Estado
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    2
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    2
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Apreensão de Maconha
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    0
+                                </td>
+                            </tr>
+                            
+                            <tr class="hover:bg-slate-50/80 transition linha-registro-uf">
+                                <td class="py-2.5 px-4 font-semibold text-slate-900 campo-nome-crime">
+                                    Apreensão de Cocaína
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-pink-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right text-indigo-700 font-bold">
+                                    0
+                                </td>
+                                <td class="py-2.5 px-4 text-right font-black text-slate-900">
+                                    0
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between text-xs text-slate-400 pt-2">
+                <span>Total de categorias registradas: <strong>24</strong></span>
+                <span>Base Oficial VDE / Ministério da Justiça</span>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ====================================================================== -->
+    <!-- 6. RODAPÉ INSTITUCIONAL MINIMALISTA -->
+    <!-- ====================================================================== -->
+    <footer class="bg-white border-t border-gray-100 mt-auto py-6 text-slate-500 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p class="font-medium">
+                &copy; 2025/2026 Painel de Análise de Segurança Pública &bull; Unidade Federativa: Amazonas (AM).
+            </p>
+            <a href="../../index.html" class="text-blue-600 hover:text-blue-800 font-semibold transition">
+                ← Voltar ao Panorama Nacional
+            </a>
+        </div>
+    </footer>
+
+    <!-- ====================================================================== -->
+    <!-- 7. SCRIPTS CHART.JS DA PÁGINA DO ESTADO -->
+    <!-- ====================================================================== -->
+    <script>
+        const chartLinhasLabels = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+        const chartLinhasValues = [1103, 1221, 1261, 1216, 1357, 1253, 1400, 1491, 1326, 1365, 1279, 1290];
+        const chartCrimesLabels = ["Mandado de prisão cumprido", "Tráfico de drogas", "Furto de veículo", "Arma de Fogo Apreendida", "Estupro de vulnerável", "Homicídio doloso", "Tentativa de homicídio", "Roubo de veículo", "Estupro", "Suicídio"];
+        const chartCrimesValues = [4466, 3274, 1732, 1718, 1353, 708, 642, 587, 416, 226];
+
+        // 1. Gráfico de Linhas / Área Temporal da UF
+        const ctxLinha = document.getElementById('chartEvolucaoMensalUf').getContext('2d');
+        const gradLinha = ctxLinha.createLinearGradient(0, 0, 0, 320);
+        gradLinha.addColorStop(0, 'rgba(37, 99, 235, 0.3)');
+        gradLinha.addColorStop(1, 'rgba(37, 99, 235, 0.0)');
+
+        new Chart(ctxLinha, {
+            type: 'line',
+            data: {
+                labels: chartLinhasLabels,
+                datasets: [{
+                    label: 'Ocorrências',
+                    data: chartLinhasValues,
+                    borderColor: '#2563eb',
+                    borderWidth: 2.5,
+                    fill: true,
+                    backgroundColor: gradLinha,
+                    tension: 0.35,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#2563eb',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1e293b',
+                        titleColor: '#94a3b8',
+                        bodyColor: '#ffffff',
+                        padding: 10,
+                        cornerRadius: 10,
+                        callbacks: {
+                            label: (c) => ` Total: ${c.parsed.y.toLocaleString('pt-BR')} ocorrências`
+                        }
+                    }
+                },
+                scales: {
+                    x: { grid: { display: false }, ticks: { font: { weight: '600', size: 11 } } },
+                    y: { 
+                        grid: { color: 'rgba(241, 245, 249, 1)' },
+                        ticks: {
+                            callback: (v) => v.toLocaleString('pt-BR'),
+                            font: { size: 10 }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 2. Gráfico de Barras Horizontais dos Principais Crimes na UF
+        const ctxBarra = document.getElementById('chartCrimesUf').getContext('2d');
+        const degradêBarras = [
+            '#1e3a8a', '#1e40af', '#1d4ed8', '#2563eb', '#3b82f6',
+            '#60a5fa', '#93c5fd', '#bfdbfe', '#cbd5e1', '#e2e8f0'
+        ];
+
+        new Chart(ctxBarra, {
+            type: 'bar',
+            data: {
+                labels: chartCrimesLabels,
+                datasets: [{
+                    data: chartCrimesValues,
+                    backgroundColor: degradêBarras.slice(0, chartCrimesLabels.length),
+                    borderRadius: 6,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1e293b',
+                        titleColor: '#94a3b8',
+                        bodyColor: '#ffffff',
+                        padding: 10,
+                        cornerRadius: 10,
+                        callbacks: {
+                            label: (c) => ` ${c.parsed.x.toLocaleString('pt-BR')} ocorrências`
+                        }
+                    }
+                },
+                scales: {
+                    x: { 
+                        grid: { color: 'rgba(241, 245, 249, 1)' },
+                        ticks: { callback: (v) => v.toLocaleString('pt-BR'), font: { size: 10 } }
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: {
+                            font: { weight: '600', size: 11 },
+                            callback: function(val) {
+                                const text = this.getLabelForValue(val);
+                                return text.length > 25 ? text.substr(0, 25) + '...' : text;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Filtro em tempo real para a tabela da UF
+        function filtrarTabelaLocal() {
+            const input = document.getElementById('filtroTabelaUf');
+            const termo = input.value.toLowerCase().trim();
+            const linhas = document.querySelectorAll('.linha-registro-uf');
+
+            linhas.forEach(linha => {
+                const crime = (linha.querySelector('.campo-nome-crime')?.textContent || '').toLowerCase();
+                if (crime.includes(termo)) {
+                    linha.style.display = '';
+                } else {
+                    linha.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

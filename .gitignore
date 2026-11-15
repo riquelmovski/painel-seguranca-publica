@@ -1,0 +1,60 @@
+# ==============================================================================
+# .gitignore - Painel de Análise de Segurança Pública
+# ==============================================================================
+
+# Ambientes Virtuais Python
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Bytecode e Cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Bancos de Dados Locais
+*.sqlite3-journal
+
+# Arquivos de Sistema Operacional (macOS e Windows)
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Editores e IDEs (VS Code, PyCharm, Sublime)
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# Logs e Arquivos Temporários
+*.log
+*.tmp
+*.bak

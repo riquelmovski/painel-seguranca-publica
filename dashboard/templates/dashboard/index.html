@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="h-full bg-slate-50/60">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Segurança Pública - Brasil (VDE 2025/2026)</title>
+    
+    <!-- 1. Tipografia Google: Plus Jakarta Sans / Google Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- 2. Tailwind CSS via CDN com personalização Google Material 3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                    },
+                    colors: {
+                        google: {
+                            blue: '#1a73e8',
+                            dark: '#202124',
+                            gray: '#5f6368',
+                            light: '#f8f9fa',
+                            surface: '#ffffff',
+                            border: '#e8eaed'
+                        }
+                    },
+                    boxShadow: {
+                        'google-nav': '0 1px 3px rgba(0, 0, 0, 0.04)',
+                        'google-card': '0 4px 20px -4px rgba(0, 0, 0, 0.05)',
+                        'google-hover': '0 8px 30px -6px rgba(0, 0, 0, 0.08)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        /* Custom scrollbar para o dropdown */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f8fafc;
+            border-radius: 9999px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        /* Tooltip Leaflet customizado Google Style */
+        .leaflet-tooltip-google {
+            background: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 14px !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+            padding: 0 !important;
+        }
+        .leaflet-tooltip-google::before {
+            border-top-color: #ffffff !important;
+        }
+    </style>
+    
+    <!-- 3. Chart.js via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- 4. Leaflet.js CSS & JS via CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body class="min-h-full flex flex-col bg-slate-50/60 text-slate-800 antialiased font-sans">
+
+    <!-- ====================================================================== -->
+    <!-- 1. CABEÇALHO MINIMALISTA (ESTILO GOOGLE / MATERIAL 3) -->
+    <!-- ====================================================================== -->
+    <header class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                
+                <!-- Lado Esquerdo: Logo & Navegação Principal -->
+                <div class="flex items-center space-x-8">
+                    
+                    <!-- Logo / Título -->
+                    <a href="{% url 'dashboard:index' %}" class="flex items-center space-x-3 group">
+                        <div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center shadow-sm transition-transform group-hover:scale-105">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-slate-900 font-bold text-base tracking-tight leading-tight">
+                                Painel de Segurança Pública
+                            </span>
+                            <span class="text-[10px] text-slate-400 font-medium tracking-wider uppercase">
+                                Estatísticas Oficiais &bull; VDE 2025
+                            </span>
+                        </div>
+                    </a>
+
+                    <!-- Links de Navegação com Mega Menu -->
+                    <nav class="hidden md:flex items-center space-x-1">
+                        
+                        <!-- 1. Link Visão Geral -->
+                        <a href="{% url 'dashboard:index' %}" 
+                           class="px-3.5 py-2 text-sm font-semibold rounded-lg transition {% if not evento_selecionado %}text-slate-900 bg-slate-100/80{% else %}text-slate-600 hover:text-slate-900 hover:bg-slate-50{% endif %}">
+                            Visão Geral
+                        </a>
+
+                        <!-- 2. Menu "Por estados" com Mega Menu em 5 Colunas por Região -->
+                        <div class="relative group">
+                            <button type="button" 
+                                    class="inline-flex items-center gap-1 px-3.5 py-2 text-sm font-semibold text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition">
+                                <span>Por estados</span>
+                                <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-700 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </button>
+
+                            <!-- Mega Menu Flutuante (Hover) -->
+                            <div class="absolute top-full left-0 pt-2 hidden group-hover:block z-50">
+                                <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 w-[700px] transition-all">
+                                    <div class="flex items-center justify-between pb-3 mb-4 border-b border-gray-100 text-xs">
+                                        <span class="font-bold text-slate-900 uppercase tracking-wider">Unidades Federativas por Grande Região</span>
+                                        <span class="text-slate-400 font-medium">27 Estados</span>
+                                    </div>
+
+                                    <div class="grid grid-cols-5 gap-3.5">
+                                        
+                                        <!-- Nordeste -->
+                                        <div>
+                                            <h4 class="text-[11px] font-bold text-indigo-600 uppercase tracking-wider mb-2">Nordeste</h4>
+                                            <div class="space-y-0.5">
+                                                <a href="/estado/AL/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">AL <span class="text-slate-400 font-normal">Alagoas</span></a>
+                                                <a href="/estado/BA/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">BA <span class="text-slate-400 font-normal">Bahia</span></a>
+                                                <a href="/estado/CE/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">CE <span class="text-slate-400 font-normal">Ceará</span></a>
+                                                <a href="/estado/MA/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">MA <span class="text-slate-400 font-normal">Maranhão</span></a>
+                                                <a href="/estado/PB/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">PB <span class="text-slate-400 font-normal">Paraíba</span></a>
+                                                <a href="/estado/PE/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">PE <span class="text-slate-400 font-normal">Pernambuco</span></a>
+                                                <a href="/estado/PI/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">PI <span class="text-slate-400 font-normal">Piauí</span></a>
+                                                <a href="/estado/RN/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">RN <span class="text-slate-400 font-normal">R. G. Norte</span></a>
+                                                <a href="/estado/SE/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">SE <span class="text-slate-400 font-normal">Sergipe</span></a>
+                                            </div>
+                                        </div>
+
+                                        <!-- Sudeste -->
+                                        <div>
+                                            <h4 class="text-[11px] font-bold text-blue-600 uppercase tracking-wider mb-2">Sudeste</h4>
+                                            <div class="space-y-0.5">
+                                                <a href="/estado/ES/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">ES <span class="text-slate-400 font-normal">Esp. Santo</span></a>
+                                                <a href="/estado/MG/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">MG <span class="text-slate-400 font-normal">Minas Gerais</span></a>
+                                                <a href="/estado/RJ/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">RJ <span class="text-slate-400 font-normal">Rio de Janeiro</span></a>
+                                                <a href="/estado/SP/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">SP <span class="text-slate-400 font-normal">São Paulo</span></a>
+                                            </div>
+                                        </div>
+
+                                        <!-- Sul -->
+                                        <div>
+                                            <h4 class="text-[11px] font-bold text-emerald-600 uppercase tracking-wider mb-2">Sul</h4>
+                                            <div class="space-y-0.5">
+                                                <a href="/estado/PR/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">PR <span class="text-slate-400 font-normal">Paraná</span></a>
+                                                <a href="/estado/RS/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">RS <span class="text-slate-400 font-normal">R. G. Sul</span></a>
+                                                <a href="/estado/SC/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">SC <span class="text-slate-400 font-normal">S. Catarina</span></a>
+                                            </div>
+                                        </div>
+
+                                        <!-- Centro-Oeste -->
+                                        <div>
+                                            <h4 class="text-[11px] font-bold text-amber-600 uppercase tracking-wider mb-2">Centro-Oeste</h4>
+                                            <div class="space-y-0.5">
+                                                <a href="/estado/DF/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">DF <span class="text-slate-400 font-normal">Dist. Federal</span></a>
+                                                <a href="/estado/GO/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">GO <span class="text-slate-400 font-normal">Goiás</span></a>
+                                                <a href="/estado/MT/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">MT <span class="text-slate-400 font-normal">Mato Grosso</span></a>
+                                                <a href="/estado/MS/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">MS <span class="text-slate-400 font-normal">M. G. Sul</span></a>
+                                            </div>
+                                        </div>
+
+                                        <!-- Norte -->
+                                        <div>
+                                            <h4 class="text-[11px] font-bold text-cyan-600 uppercase tracking-wider mb-2">Norte</h4>
+                                            <div class="space-y-0.5">
+                                                <a href="/estado/AC/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">AC <span class="text-slate-400 font-normal">Acre</span></a>
+                                                <a href="/estado/AP/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">AP <span class="text-slate-400 font-normal">Amapá</span></a>
+                                                <a href="/estado/AM/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">AM <span class="text-slate-400 font-normal">Amazonas</span></a>
+                                                <a href="/estado/PA/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">PA <span class="text-slate-400 font-normal">Pará</span></a>
+                                                <a href="/estado/RO/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">RO <span class="text-slate-400 font-normal">Rondônia</span></a>
+                                                <a href="/estado/RR/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">RR <span class="text-slate-400 font-normal">Roraima</span></a>
+                                                <a href="/estado/TO/" class="hover:bg-slate-50 px-2 py-1 rounded-lg text-xs text-slate-700 font-medium block transition">TO <span class="text-slate-400 font-normal">Tocantins</span></a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Menu "Por ocorrências" com Rolagem Suave -->
+                        <div class="relative group">
+                            <button type="button" 
+                                    class="inline-flex items-center gap-1 px-3.5 py-2 text-sm font-semibold text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition">
+                                <span>Por ocorrências</span>
+                                <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-700 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </button>
+
+                            <!-- Dropdown Suspenso com Rolagem -->
+                            <div class="absolute top-full left-0 pt-2 hidden group-hover:block z-50">
+                                <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-3 w-80 max-h-80 overflow-y-auto custom-scroll transition-all">
+                                    <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1.5 mb-1 border-b border-gray-100 flex items-center justify-between">
+                                        <span>Filtrar Indicador</span>
+                                        <span class="text-[10px] text-blue-600 font-semibold">Tempo Real</span>
+                                    </div>
+                                    <a href="javascript:void(0);" 
+                                       data-evento="Todos os Eventos"
+                                       class="filtro-ocorrencia-btn px-3 py-2 text-xs font-semibold rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition {% if not evento_selecionado %}bg-blue-50 text-blue-700 font-bold{% endif %}">
+                                        <span>🔍 Todos os Eventos (Geral)</span>
+                                        <span class="indicador-ativo w-1.5 h-1.5 rounded-full bg-blue-600 {% if evento_selecionado %}hidden{% endif %}"></span>
+                                    </a>
+                                    {% for ev in lista_eventos %}
+                                    <a href="javascript:void(0);" 
+                                       data-evento="{{ ev }}"
+                                       class="filtro-ocorrencia-btn px-3 py-2 text-xs rounded-xl text-slate-700 hover:bg-slate-50 flex items-center justify-between transition {% if ev == evento_selecionado %}bg-blue-50 text-blue-700 font-bold{% endif %}">
+                                        <span class="truncate" title="{{ ev }}">{{ ev }}</span>
+                                        <span class="indicador-ativo w-1.5 h-1.5 rounded-full bg-blue-600 {% if ev != evento_selecionado %}hidden{% endif %} flex-shrink-0"></span>
+                                    </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                    </nav>
+                </div>
+
+                <!-- Lado Direito: Seletor Rápido e Botão Pílula Google -->
+                <div class="flex items-center space-x-3">
+                    <!-- Seletor no Cabeçalho (Reativo) -->
+                    <div class="hidden sm:flex items-center">
+                        <select id="seletorOcorrenciaHeader" 
+                                class="bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold rounded-xl px-3 py-1.5 focus:ring-2 focus:ring-blue-500 focus:outline-none transition shadow-sm cursor-pointer max-w-[210px] truncate"
+                                title="Filtrar tipo de ocorrência no mapa em tempo real">
+                            <option value="Todos os Eventos">🔍 Todos os Eventos (Geral)</option>
+                            {% for ev in lista_eventos %}
+                            <option value="{{ ev }}" {% if ev == evento_selecionado %}selected{% endif %}>
+                                {{ ev }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    {% if evento_selecionado %}
+                    <span id="badgeFiltroAtivo" class="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200/60 truncate max-w-[150px]">
+                        {{ evento_selecionado }}
+                    </span>
+                    {% endif %}
+
+                    <!-- Botão Pílula Estilo Google -->
+                    <a href="{% url 'dashboard:exportar_csv' %}{% if evento_selecionado %}?evento={{ evento_selecionado }}{% endif %}" 
+                       class="rounded-full bg-slate-900 text-white px-5 py-2 text-sm font-medium hover:bg-slate-800 transition shadow-sm inline-flex items-center gap-2 active:scale-95">
+                        <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        <span>Exportar CSV</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- ====================================================================== -->
+    <!-- 2. CONTEÚDO PRINCIPAL (DASHBOARD) -->
+    <!-- ====================================================================== -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- CABEÇALHO DA SEÇÃO DE DADOS & FILTRO ATIVO -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-gray-200/60">
+            <div>
+                <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
+                    Panorama Nacional de Segurança Pública
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
+                    Consolidado estatístico de ocorrências e vitimização no Brasil em 2025.
+                </p>
+            </div>
+
+            {% if evento_selecionado %}
+            <div class="flex items-center space-x-2">
+                <span class="text-xs font-semibold text-slate-500">Filtro aplicado:</span>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-slate-900 text-white">
+                    {{ evento_selecionado }}
+                </span>
+                <a href="{% url 'dashboard:index' %}" class="text-xs font-semibold text-blue-600 hover:text-blue-800 hover:underline">
+                    Remover filtro
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- ====================================================================== -->
+        <!-- 3. GRADE DE CARTÕES DE MÉTRICAS (KPIS) POLIDOS COM SPARKLINES -->
+        <!-- ====================================================================== -->
+        <section aria-labelledby="kpis-heading">
+            <h2 id="kpis-heading" class="sr-only">Métricas Consolidadas</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {% for kpi in kpis %}
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-6px_rgba(0,0,0,0.08)] p-6 transition-all duration-300 flex flex-col justify-between relative overflow-hidden group">
+                    
+                    <div class="flex items-start justify-between mb-2">
+                        <div>
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                                {{ kpi.titulo }}
+                            </span>
+                            <div class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-1.5">
+                                {{ kpi.valor }}
+                            </div>
+                        </div>
+
+                        <div class="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105
+                                    {% if kpi.cor == 'rose' %}bg-rose-50 text-rose-600
+                                    {% elif kpi.cor == 'pink' %}bg-pink-50 text-pink-600
+                                    {% elif kpi.cor == 'blue' %}bg-blue-50 text-blue-600
+                                    {% elif kpi.cor == 'amber' %}bg-amber-50 text-amber-600
+                                    {% else %}bg-indigo-50 text-indigo-600{% endif %}">
+                            
+                            {% if kpi.tipo_icone == 'alerta' %}
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                            {% elif kpi.tipo_icone == 'feminino' %}
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
+                            {% elif kpi.tipo_icone == 'masculino' %}
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                            {% elif kpi.tipo_icone == 'seguranca' %}
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                            {% elif kpi.tipo_icone == 'localizacao' %}
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            {% elif kpi.tipo_icone == 'calendario' %}
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            {% elif kpi.tipo_icone == 'prisao' %}
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                            {% else %}
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                            </svg>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Mini Sparkline Minimalista -->
+                    <div class="h-9 w-full my-2">
+                        <canvas id="sparkline-{{ forloop.counter0 }}" class="w-full h-full"></canvas>
+                    </div>
+
+                    <p class="text-xs text-slate-500 font-medium flex items-center pt-2 border-t border-slate-50">
+                        <span class="inline-block w-2 h-2 rounded-full mr-2
+                                     {% if kpi.cor == 'rose' %}bg-rose-500
+                                     {% elif kpi.cor == 'pink' %}bg-pink-500
+                                     {% elif kpi.cor == 'blue' %}bg-blue-600
+                                     {% elif kpi.cor == 'amber' %}bg-amber-500
+                                     {% else %}bg-indigo-500{% endif %}"></span>
+                        {{ kpi.descricao }}
+                    </p>
+
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- ====================================================================== -->
+        <!-- 4. MAPA INTERATIVO COROPLÉTICO DO BRASIL (ESTILO APURAÇÃO ELEITORAL) -->
+        <!-- ====================================================================== -->
+        <section aria-labelledby="mapa-heading" class="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] p-6 sm:p-7 space-y-5">
+            
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-gray-100 gap-3">
+                <div>
+                    <h3 id="mapa-heading" class="text-base font-bold text-slate-900 flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                        Distribuição Geográfica de Ocorrências (Mapa do Brasil)
+                    </h3>
+                    <p class="text-xs text-slate-500 font-medium mt-0.5">
+                        Escala cromática por densidade de registros. <strong>Passe o mouse</strong> sobre qualquer UF para visualizar os dados consolidados ou <strong>clique no estado</strong> para acessar a página dedicada.
+                    </p>
+                </div>
+                
+                <div class="flex items-center flex-wrap gap-2.5">
+                    <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-200/80 rounded-xl px-2.5 py-1 shadow-sm">
+                        <label for="seletorMapaOcorrencia" class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Ocorrência:</label>
+                        <select id="seletorMapaOcorrencia" 
+                                class="bg-transparent text-slate-800 text-xs font-bold focus:outline-none cursor-pointer max-w-[210px] truncate">
+                            <option value="Todos os Eventos">🔍 Todos os Eventos (Geral)</option>
+                            {% for ev in lista_eventos %}
+                            <option value="{{ ev }}" {% if ev == evento_selecionado %}selected{% endif %}>
+                                {{ ev }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 hidden sm:inline-flex">
+                        27 Estados
+                    </span>
+                </div>
+            </div>
+
+            <!-- Container do Mapa com Borda Fina e Altura Adequada -->
+            <div class="relative w-full h-[520px] rounded-2xl overflow-hidden border border-slate-100 bg-slate-50/70 shadow-inner">
+                <div id="mapaBrasil" class="w-full h-full z-0"></div>
+
+                <!-- Legenda Elegante Suspensa no Canto Inferior Direito -->
+                <div id="legendaMapa" class="absolute bottom-4 right-4 bg-white/95 backdrop-blur border border-gray-100 rounded-2xl p-3.5 shadow-lg z-[1000] text-xs font-medium space-y-1.5 max-w-[210px]">
+                    <div class="font-bold text-[11px] uppercase tracking-wider text-slate-700 pb-1.5 border-b border-gray-100 flex items-center justify-between">
+                        <span>Intensidade</span>
+                        <span class="text-[10px] text-slate-400 font-normal">Faixas de Volume</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="w-3.5 h-3.5 rounded" style="background-color: #1e1b4b;"></span>
+                        <span class="text-[11px] text-slate-700 font-semibold">Muito Alta (Líderes)</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="w-3.5 h-3.5 rounded" style="background-color: #1e3a8a;"></span>
+                        <span class="text-[11px] text-slate-600">Alta Concentração</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="w-3.5 h-3.5 rounded" style="background-color: #2563eb;"></span>
+                        <span class="text-[11px] text-slate-600">Média-Alta</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="w-3.5 h-3.5 rounded" style="background-color: #60a5fa;"></span>
+                        <span class="text-[11px] text-slate-600">Média Incidência</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="w-3.5 h-3.5 rounded" style="background-color: #93c5fd;"></span>
+                        <span class="text-[11px] text-slate-600">Moderada</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="w-3.5 h-3.5 rounded" style="background-color: #e2e8f0;"></span>
+                        <span class="text-[11px] text-slate-600">Baixa Incidência</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================================================================== -->
+        <!-- 5. SEÇÃO DE GRÁFICOS ANALÍTICOS (CHART.JS) -->
+        <!-- ====================================================================== -->
+        <section aria-labelledby="graficos-heading">
+            <h2 id="graficos-heading" class="sr-only">Visualizações Analíticas</h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- CARD GRÁFICO 1: BARRAS HORIZONTAIS -->
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-6px_rgba(0,0,0,0.08)] p-6 transition-all duration-300 flex flex-col justify-between">
+                    <div class="flex items-center justify-between pb-4 mb-4 border-b border-gray-100">
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-sm bg-blue-600"></span>
+                                {{ chart_barras_titulo }}
+                            </h3>
+                            <p class="text-xs text-slate-400 font-medium mt-0.5">Ranking comparativo consolidado</p>
+                        </div>
+                        <span class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700">
+                            Top 10
+                        </span>
+                    </div>
+
+                    <div class="relative w-full h-[360px]">
+                        <canvas id="chartDistribuicaoBarras"></canvas>
+                    </div>
+                </div>
+
+                <!-- CARD GRÁFICO 2: EVOLUÇÃO MENSAL COM GRADIENTE -->
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-6px_rgba(0,0,0,0.08)] p-6 transition-all duration-300 flex flex-col justify-between">
+                    <div class="flex items-center justify-between pb-4 mb-4 border-b border-gray-100">
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-sm bg-indigo-600"></span>
+                                {{ chart_linhas_titulo }}
+                            </h3>
+                            <p class="text-xs text-slate-400 font-medium mt-0.5">Série temporal mês a mês de 2025</p>
+                        </div>
+                        <span class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700">
+                            12 Meses
+                        </span>
+                    </div>
+
+                    <div class="relative w-full h-[360px]">
+                        <canvas id="chartEvolucaoMensal"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ====================================================================== -->
+    <!-- 6. RODAPÉ INSTITUCIONAL MINIMALISTA -->
+    <!-- ====================================================================== -->
+    <footer class="bg-white border-t border-gray-100 mt-auto py-6 text-slate-500 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p class="font-medium">
+                &copy; 2025/2026 Painel de Inteligência de Segurança Pública &bull; Sistema VDE / Ministério da Justiça.
+            </p>
+            <p class="text-slate-400">
+                Design System inspirado no Google Material 3 &bull; Desenvolvido com Django, Pandas e Leaflet.
+            </p>
+        </div>
+    </footer>
+
+    <!-- ====================================================================== -->
+    <!-- 7. SCRIPTS: MAPA COROPLÉTICO LEAFLET & CHART.JS -->
+    <!-- ====================================================================== -->
+    <script>
+        // Dados injetados pelo Django
+        const mapaDadosUf = {{ mapa_dados_uf_json|safe }};
+        const dadosMapaPorEvento = {{ dados_mapa_por_evento_json|safe }};
+        const maxOcorrencias = {{ max_ocorrencias_uf }};
+        const chartBarrasLabels = {{ chart_barras_labels_json|safe }};
+        const chartBarrasValues = {{ chart_barras_values_json|safe }};
+        const chartLinhasLabels = {{ chart_linhas_labels_json|safe }};
+        const chartLinhasValues = {{ chart_linhas_values_json|safe }};
+
+        // =====================================================================
+        // MÓDULO DO MAPA COROPLÉTICO DO BRASIL (LEAFLET.JS + IBGE GEOJSON)
+        // =====================================================================
+
+        // Mapeamento oficial dos códigos do IBGE (codarea) para as 27 UFs
+        const IBGE_COD_TO_UF = {
+            '11': 'RO', '12': 'AC', '13': 'AM', '14': 'RR', '15': 'PA', '16': 'AP', '17': 'TO',
+            '21': 'MA', '22': 'PI', '23': 'CE', '24': 'RN', '25': 'PB', '26': 'PE', '27': 'AL',
+            '28': 'SE', '29': 'BA', '31': 'MG', '32': 'ES', '33': 'RJ', '35': 'SP', '41': 'PR',
+            '42': 'SC', '43': 'RS', '50': 'MS', '51': 'MT', '52': 'GO', '53': 'DF'
+        };
+
+        const NOMES_ESTADOS = {
+            'AC': 'Acre', 'AL': 'Alagoas', 'AP': 'Amapá', 'AM': 'Amazonas',
+            'BA': 'Bahia', 'CE': 'Ceará', 'DF': 'Distrito Federal', 'ES': 'Espírito Santo',
+            'GO': 'Goiás', 'MA': 'Maranhão', 'MT': 'Mato Grosso', 'MS': 'Mato Grosso do Sul',
+            'MG': 'Minas Gerais', 'PA': 'Pará', 'PB': 'Paraíba', 'PR': 'Paraná',
+            'PE': 'Pernambuco', 'PI': 'Piauí', 'RJ': 'Rio de Janeiro', 'RN': 'Rio Grande do Norte',
+            'RS': 'Rio Grande do Sul', 'RO': 'Rondônia', 'RR': 'Roraima', 'SC': 'Santa Catarina',
+            'SP': 'São Paulo', 'SE': 'Sergipe', 'TO': 'Tocantins'
+        };
+
+        // Estado reativo da ocorrência selecionada
+        let eventoAtual = '{{ evento_selecionado|escapejs }}' || 'Todos os Eventos';
+        let camadaGeoJson = null;
+        let maxValorAtual = maxOcorrencias || 1;
+        let faixasEscala = [];
+
+        // 1. Inicialização do Mapa Leaflet
+        const map = L.map('mapaBrasil', { 
+            scrollWheelZoom: false,
+            zoomControl: true,
+            minZoom: 3,
+            maxZoom: 12
+        }).setView([-14.235, -51.925], 4);
+
+        // Tile layer CartoDB Positron (light_all) com API Key
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?api_key=cb1_56jw_1_e0d1ff2b1decbdfd649c1dd3', {
+            attribution: '&copy; <a href="https://carto.com/">CartoDB</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            subdomains: 'abcd',
+            maxZoom: 18
+        }).addTo(map);
+
+        // Extrai a sigla da UF a partir das propriedades da feature (IBGE codarea ou sigla)
+        function extrairSiglaUf(feature) {
+            if (!feature) return '';
+            const props = feature.properties || {};
+            if (props.codarea && IBGE_COD_TO_UF[String(props.codarea)]) {
+                return IBGE_COD_TO_UF[String(props.codarea)];
+            }
+            if (props.sigla) return String(props.sigla).toUpperCase();
+            if (props.UF) return String(props.UF).toUpperCase();
+            if (props.UF_05) return String(props.UF_05).toUpperCase();
+            if (feature.id && String(feature.id).length === 2) return String(feature.id).toUpperCase();
+            if (props.name && NOMES_ESTADOS[props.name.toUpperCase()]) return props.name.toUpperCase();
+            return '';
+        }
+
+        // Obtém o registro estatístico da UF para o evento atualmente filtrado
+        function obterDadosUf(sigla) {
+            const evChave = (eventoAtual && dadosMapaPorEvento[eventoAtual]) ? eventoAtual : 'Todos os Eventos';
+            const dadosEvento = dadosMapaPorEvento[evChave] || dadosMapaPorEvento[''] || {};
+            return dadosEvento[sigla] || {
+                sigla: sigla,
+                nome: NOMES_ESTADOS[sigla] || sigla,
+                total: 0,
+                total_formatado: '0',
+                pct_brasil: 0.0,
+                ranking: '-'
+            };
+        }
+
+        // 2. Recalcula a escala cromática dinamicamente com base no valor máximo atual
+        function recalcularEscala() {
+            const evChave = (eventoAtual && dadosMapaPorEvento[eventoAtual]) ? eventoAtual : 'Todos os Eventos';
+            const dadosEvento = dadosMapaPorEvento[evChave] || dadosMapaPorEvento[''] || {};
+            const valores = Object.values(dadosEvento).map(d => Number(d.total) || 0);
+            
+            maxValorAtual = valores.length > 0 ? Math.max(...valores) : 1;
+            if (maxValorAtual <= 0) maxValorAtual = 1;
+
+            faixasEscala = [
+                { min: Math.round(maxValorAtual * 0.60), cor: '#1e1b4b', label: 'Muito Alta (Líderes)' },
+                { min: Math.round(maxValorAtual * 0.35), cor: '#1e3a8a', label: 'Alta Concentração' },
+                { min: Math.round(maxValorAtual * 0.18), cor: '#2563eb', label: 'Média-Alta' },
+                { min: Math.round(maxValorAtual * 0.08), cor: '#60a5fa', label: 'Média Incidência' },
+                { min: 1, cor: '#93c5fd', label: 'Moderada' },
+                { min: 0, cor: '#e2e8f0', label: 'Baixa / 0 registros' }
+            ];
+
+            atualizarLegendaVisual();
+        }
+
+        // Retorna a cor correspondente ao volume do estado
+        function obterCorPorValor(val) {
+            if (!val || val <= 0) return '#e2e8f0';
+            for (const faixa of faixasEscala) {
+                if (val >= faixa.min && faixa.min > 0) {
+                    return faixa.cor;
+                }
+            }
+            return '#e2e8f0';
+        }
+
+        // Atualiza a legenda no canto inferior direito com os valores exatos da escala
+        function atualizarLegendaVisual() {
+            const elLegenda = document.getElementById('legendaMapa');
+            if (!elLegenda) return;
+
+            const nomeEventoCurto = (!eventoAtual || eventoAtual === 'Todos os Eventos') 
+                ? 'Geral' 
+                : (eventoAtual.length > 18 ? eventoAtual.substr(0, 18) + '...' : eventoAtual);
+
+            let html = `
+                <div class="font-bold text-[11px] uppercase tracking-wider text-slate-700 pb-1.5 border-b border-gray-100 flex items-center justify-between">
+                    <span>${nomeEventoCurto}</span>
+                    <span class="text-[10px] text-blue-600 font-bold">Máx: ${maxValorAtual.toLocaleString('pt-BR')}</span>
+                </div>
+                <div class="space-y-1 pt-1">
+                    <div class="flex items-center space-x-2">
+                        <span class="w-3.5 h-3.5 rounded flex-shrink-0" style="background-color: #1e1b4b;"></span>
+                        <span class="text-[10px] text-slate-700 font-semibold">&gt; ${Math.round(maxValorAtual * 0.60).toLocaleString('pt-BR')} (Muito Alta)</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="w-3.5 h-3.5 rounded flex-shrink-0" style="background-color: #1e3a8a;"></span>
+                        <span class="text-[10px] text-slate-600">${Math.round(maxValorAtual * 0.35).toLocaleString('pt-BR')} - ${Math.round(maxValorAtual * 0.60).toLocaleString('pt-BR')}</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="w-3.5 h-3.5 rounded flex-shrink-0" style="background-color: #2563eb;"></span>
+                        <span class="text-[10px] text-slate-600">${Math.round(maxValorAtual * 0.18).toLocaleString('pt-BR')} - ${Math.round(maxValorAtual * 0.35).toLocaleString('pt-BR')}</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="w-3.5 h-3.5 rounded flex-shrink-0" style="background-color: #60a5fa;"></span>
+                        <span class="text-[10px] text-slate-600">${Math.round(maxValorAtual * 0.08).toLocaleString('pt-BR')} - ${Math.round(maxValorAtual * 0.18).toLocaleString('pt-BR')}</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="w-3.5 h-3.5 rounded flex-shrink-0" style="background-color: #93c5fd;"></span>
+                        <span class="text-[10px] text-slate-600">1 - ${Math.round(maxValorAtual * 0.08).toLocaleString('pt-BR')}</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="w-3.5 h-3.5 rounded flex-shrink-0" style="background-color: #e2e8f0;"></span>
+                        <span class="text-[10px] text-slate-500">0 registros</span>
+                    </div>
+                </div>
+            `;
+
+            elLegenda.innerHTML = html;
+        }
+
+        // Estilização dos polígonos GeoJSON
+        function estiloFeature(feature) {
+            const sigla = extrairSiglaUf(feature);
+            const dados = obterDadosUf(sigla);
+            return {
+                fillColor: obterCorPorValor(dados.total),
+                weight: 1.5,
+                opacity: 1,
+                color: '#ffffff',
+                fillOpacity: 0.88
+            };
+        }
+
+        // Destaque visual ao passar o mouse
+        function hoverDestaque(e) {
+            const layer = e.target;
+            layer.setStyle({
+                weight: 3,
+                color: '#ffffff',
+                fillOpacity: 1.0
+            });
+            if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+                layer.bringToFront();
+            }
+        }
+
+        // Reset do destaque no mouseout
+        function hoverReset(e) {
+            if (camadaGeoJson) {
+                camadaGeoJson.resetStyle(e.target);
+            }
+        }
+
+        // Conteúdo formatado do Tooltip
+        function criarConteudoTooltip(sigla) {
+            const dados = obterDadosUf(sigla);
+            const labelEvento = (eventoAtual && eventoAtual !== 'Todos os Eventos') ? eventoAtual : 'Todos os Eventos';
+
+            return `
+                <div class="p-3 min-w-[210px] font-sans">
+                    <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+                        <div class="flex items-center space-x-1.5">
+                            <span class="w-6 h-6 rounded-md bg-slate-900 text-white flex items-center justify-center font-bold text-[11px]">${dados.sigla}</span>
+                            <span class="font-bold text-slate-900 text-xs">${dados.nome} (${dados.sigla})</span>
+                        </div>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700">${dados.ranking}º lugar</span>
+                    </div>
+                    <div class="mt-2.5 space-y-1.5 text-xs">
+                        <div class="text-[11px] text-slate-500 font-semibold truncate" title="${labelEvento}">
+                            📌 ${labelEvento}
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400">Total:</span>
+                            <strong class="text-slate-900 font-extrabold text-sm">${dados.total_formatado} registros</strong>
+                        </div>
+                        <div class="flex justify-between items-center text-[11px]">
+                            <span class="text-slate-400">Participação:</span>
+                            <strong class="text-indigo-600 font-bold">${dados.pct_brasil}% do Brasil</strong>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-t border-gray-100 text-[11px] text-blue-600 font-bold flex items-center justify-center gap-1">
+                        <span>Abrir página dedicada de ${dados.sigla}</span>
+                        <span>→</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Vinculação de eventos nos polígonos
+        function vincularEventosFeature(feature, layer) {
+            const sigla = extrairSiglaUf(feature);
+
+            layer.bindTooltip(criarConteudoTooltip(sigla), {
+                sticky: true,
+                direction: 'auto',
+                className: 'leaflet-tooltip-google'
+            });
+
+            layer.on({
+                mouseover: function(e) {
+                    layer.setTooltipContent(criarConteudoTooltip(sigla));
+                    hoverDestaque(e);
+                },
+                mouseout: hoverReset,
+                click: function() {
+                    if (sigla) {
+                        window.location.href = '/estado/' + sigla + '/';
+                    }
+                }
+            });
+        }
+
+        // 3. Fontes de carregamento da malha geográfica (IBGE oficial local e fallback)
+        const fontesGeoJson = [
+            '{% url "dashboard:geojson_estados" %}', // 1ª Opção: Servido localmente pelo Django (0ms, 100% offline)
+            '/api/geojson/estados/',
+            'https://servicodados.ibge.gov.br/api/v3/malhas/paises/BR?formato=application/vnd.geo+json&qualidade=minima&intrarregiao=UF', // API Oficial IBGE
+            'https://raw.githubusercontent.com/codeforamerica/click_testing/master/geo/brasil_estados.geojson'
+        ];
+
+        function carregarMalhaEstados(indice = 0) {
+            if (indice >= fontesGeoJson.length) {
+                console.error("Não foi possível carregar o GeoJSON dos estados brasileiros.");
+                return;
+            }
+
+            fetch(fontesGeoJson[indice])
+                .then(res => {
+                    if (!res.ok) throw new Error("Erro na resposta HTTP: " + res.status);
+                    return res.json();
+                })
+                .then(geojsonData => {
+                    if (camadaGeoJson) {
+                        map.removeLayer(camadaGeoJson);
+                    }
+
+                    recalcularEscala();
+
+                    // Renderiza os 27 estados sobre o mapa
+                    camadaGeoJson = L.geoJson(geojsonData, {
+                        style: estiloFeature,
+                        onEachFeature: vincularEventosFeature
+                    }).addTo(map);
+
+                    // Enquadra automaticamente nos limites do território nacional
+                    if (camadaGeoJson.getBounds().isValid()) {
+                        map.fitBounds(camadaGeoJson.getBounds(), {
+                            padding: [15, 15]
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.warn(`Tentativa com '${fontesGeoJson[indice]}' falhou. Tentando próxima fonte...`);
+                    carregarMalhaEstados(indice + 1);
+                });
+        }
+
+        // 4. Função Reativa de Atualização Dinâmica do Mapa (SEM RECARREGAR)
+        function atualizarMapaPorEvento(novoEvento) {
+            eventoAtual = (novoEvento || '').trim();
+            if (!eventoAtual || (!dadosMapaPorEvento[eventoAtual] && eventoAtual !== 'Todos os Eventos')) {
+                eventoAtual = 'Todos os Eventos';
+            }
+
+            // Recalcula a escala cromática para o evento selecionado
+            recalcularEscala();
+
+            // Aplica as novas cores aos 27 polígonos em tempo real
+            if (camadaGeoJson) {
+                camadaGeoJson.setStyle(estiloFeature);
+            }
+
+            // Sincroniza os seletores da página
+            const seletorHeader = document.getElementById('seletorOcorrenciaHeader');
+            const seletorMapa = document.getElementById('seletorMapaOcorrencia');
+            const valSinc = (eventoAtual === 'Todos os Eventos') ? 'Todos os Eventos' : eventoAtual;
+
+            if (seletorHeader && seletorHeader.value !== valSinc) {
+                seletorHeader.value = valSinc;
+            }
+            if (seletorMapa && seletorMapa.value !== valSinc) {
+                seletorMapa.value = valSinc;
+            }
+
+            // Atualiza o badge de contexto visual
+            const badgeFiltro = document.getElementById('badgeFiltroAtivo');
+            if (badgeFiltro) {
+                if (eventoAtual === 'Todos os Eventos') {
+                    badgeFiltro.classList.add('hidden');
+                } else {
+                    badgeFiltro.textContent = eventoAtual;
+                    badgeFiltro.classList.remove('hidden');
+                }
+            }
+        }
+
+        window.atualizarMapaPorEvento = atualizarMapaPorEvento;
+
+        // 5. Inicialização e Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarMalhaEstados();
+
+            // Escuta a alteração ('change') em todos os seletores de ocorrência
+            const seletores = [
+                document.getElementById('seletorOcorrenciaHeader'),
+                document.getElementById('seletorMapaOcorrencia')
+            ];
+
+            seletores.forEach(sel => {
+                if (sel) {
+                    sel.addEventListener('change', function(e) {
+                        atualizarMapaPorEvento(e.target.value);
+                    });
+                }
+            });
+
+            // Escuta cliques nos itens do dropdown "Por ocorrências"
+            document.querySelectorAll('.filtro-ocorrencia-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const ev = this.getAttribute('data-evento') || 'Todos os Eventos';
+                    atualizarMapaPorEvento(ev);
+
+                    document.querySelectorAll('.filtro-ocorrencia-btn').forEach(b => {
+                        b.classList.remove('bg-blue-50', 'text-blue-700', 'font-bold');
+                        const dot = b.querySelector('.indicador-ativo');
+                        if (dot) dot.classList.add('hidden');
+                    });
+                    this.classList.add('bg-blue-50', 'text-blue-700', 'font-bold');
+                    const meuDot = this.querySelector('.indicador-ativo');
+                    if (meuDot) meuDot.classList.remove('hidden');
+                });
+            });
+        });
+
+        // =====================================================================
+        // CHART.JS: GRÁFICOS ANALÍTICOS (BARRAS & LINHAS)
+        // =====================================================================
+        const degradêBarras = [
+            '#1e3a8a', '#1e40af', '#1d4ed8', '#2563eb', '#3b82f6',
+            '#60a5fa', '#93c5fd', '#bfdbfe', '#cbd5e1', '#e2e8f0'
+        ];
+
+        // 1. Gráfico de Barras Horizontais
+        const ctxBarras = document.getElementById('chartDistribuicaoBarras').getContext('2d');
+        new Chart(ctxBarras, {
+            type: 'bar',
+            data: {
+                labels: chartBarrasLabels,
+                datasets: [{
+                    data: chartBarrasValues,
+                    backgroundColor: degradêBarras.slice(0, chartBarrasLabels.length),
+                    borderRadius: 6,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1e293b',
+                        titleColor: '#94a3b8',
+                        bodyColor: '#ffffff',
+                        padding: 10,
+                        cornerRadius: 10,
+                        callbacks: {
+                            label: (c) => ` ${c.parsed.x.toLocaleString('pt-BR')} registros`
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(241, 245, 249, 1)' },
+                        ticks: { callback: (v) => v.toLocaleString('pt-BR'), font: { size: 10 } }
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: {
+                            font: { weight: '600', size: 11 },
+                            callback: function(val) {
+                                const text = this.getLabelForValue(val);
+                                return text.length > 25 ? text.substr(0, 25) + '...' : text;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 2. Gráfico de Evolução Mensal com Gradiente
+        const ctxLinhas = document.getElementById('chartEvolucaoMensal').getContext('2d');
+        const gradienteLinhas = ctxLinhas.createLinearGradient(0, 0, 0, 320);
+        gradienteLinhas.addColorStop(0, 'rgba(79, 70, 229, 0.25)');
+        gradienteLinhas.addColorStop(1, 'rgba(79, 70, 229, 0.0)');
+
+        new Chart(ctxLinhas, {
+            type: 'line',
+            data: {
+                labels: chartLinhasLabels,
+                datasets: [{
+                    data: chartLinhasValues,
+                    borderColor: '#4f46e5',
+                    borderWidth: 2.5,
+                    fill: true,
+                    backgroundColor: gradienteLinhas,
+                    tension: 0.35,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#4f46e5',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1e293b',
+                        titleColor: '#94a3b8',
+                        bodyColor: '#ffffff',
+                        padding: 10,
+                        cornerRadius: 10,
+                        callbacks: {
+                            label: (c) => ` Total: ${c.parsed.y.toLocaleString('pt-BR')} ocorrências`
+                        }
+                    }
+                },
+                scales: {
+                    x: { grid: { display: false }, ticks: { font: { weight: '600', size: 11 } } },
+                    y: {
+                        grid: { color: 'rgba(241, 245, 249, 1)' },
+                        ticks: { callback: (v) => v.toLocaleString('pt-BR'), font: { size: 10 } }
+                    }
+                }
+            }
+        });
+
+        // =====================================================================
+        // SPARKLINES PARA OS CARDS DE KPIS
+        // =====================================================================
+        const sparklinePalette = {
+            rose:  { border: '#e11d48', start: 'rgba(225, 29, 72, 0.25)' },
+            pink:  { border: '#ec4899', start: 'rgba(236, 72, 153, 0.25)' },
+            blue:  { border: '#2563eb', start: 'rgba(37, 99, 235, 0.25)' },
+            amber: { border: '#f59e0b', start: 'rgba(245, 158, 11, 0.25)' },
+            indigo:{ border: '#4f46e5', start: 'rgba(79, 70, 229, 0.25)' }
+        };
+
+        const sparklinesConfigs = [
+            {% for kpi in kpis %}
+            {
+                data: {{ kpi.sparkline|safe }},
+                color: '{{ kpi.cor }}'
+            },
+            {% endfor %}
+        ];
+
+        sparklinesConfigs.forEach((cfg, idx) => {
+            const canvas = document.getElementById(`sparkline-${idx}`);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const theme = sparklinePalette[cfg.color] || sparklinePalette['indigo'];
+
+            const grad = ctx.createLinearGradient(0, 0, 0, 36);
+            grad.addColorStop(0, theme.start);
+            grad.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: chartLinhasLabels,
+                    datasets: [{
+                        data: cfg.data,
+                        borderColor: theme.border,
+                        borderWidth: 1.8,
+                        fill: true,
+                        backgroundColor: grad,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        pointHoverRadius: 3,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: '#1e293b',
+                            titleColor: '#94a3b8',
+                            bodyColor: '#ffffff',
+                            bodyFont: { size: 10, weight: '700' },
+                            padding: 6,
+                            cornerRadius: 6,
+                            displayColors: false,
+                            callbacks: {
+                                title: () => '',
+                                label: (c) => `${c.label}: ${c.parsed.y.toLocaleString('pt-BR')}`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
