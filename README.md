@@ -130,7 +130,7 @@ Na base bruta unificada, registros de serviços do Corpo de Bombeiros (*Atendime
 
 ### 1. Clonar o Repositório
 ```bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
+git clone https://riquelmovski.github.io/painel-seguranca-publica.git
 cd seu-repositorio
 ```
 
