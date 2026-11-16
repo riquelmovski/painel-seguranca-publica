@@ -5,7 +5,7 @@
 [![Leaflet](https://img.shields.io/badge/Leaflet-1.9.4-199900?style=for-the-badge&logo=leaflet&logoColor=white)](https://leafletjs.com/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Pandas](https://img.shields.io/badge/Pandas-Data_Analysis-150458?style=for-the-badge&logo=pandas&logoColor=white)](https://pandas.pydata.org/)
-[![GitHub Pages](https://img.shields.io/badge/GitHub_Pages-Online_Demo-222222?style=for-the-badge&logo=github&logoColor=white)]([https://seu-usuario.github.io/seu-repositorio/](https://riquelmovski.github.io/painel-seguranca-publica/))
+[![GitHub Pages](https://img.shields.io/badge/GitHub_Pages-Online_Demo-222222?style=for-the-badge&logo=github&logoColor=white)]([https://riquelmovski.github.io/painel-seguranca-publica/](https://riquelmovski.github.io/painel-seguranca-publica/))
 
 Painel analítico e georreferenciado de alto nível para exploração estatística de indicadores de segurança pública nas **27 Unidades Federativas do Brasil**, baseado nas estatísticas do Sistema VDE (Validação de Dados Estatísticos) do Ministério da Justiça e Segurança Pública (SINESP).
 
