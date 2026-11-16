@@ -19,7 +19,7 @@ O projeto conta com interface moderna inspirada nas diretrizes do **Google Mater
 ![Preview do Dashboard](preview.png)
 
 > 🔗 **Demonstração Online no GitHub Pages:**  
-> [https://seu-usuario.github.io/seu-repositorio/](https://riquelmovski.github.io/painel-seguranca-publica/)
+> [https://riquelmovski.github.io/painel-seguranca-publica/](https://riquelmovski.github.io/painel-seguranca-publica/)
 
 ---
 
